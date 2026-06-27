@@ -27,7 +27,6 @@ const existsShortUrl = async (originalUrl: string) => {
     }
 }
 
-
 // receber uma originalUrl, validar se é uma url válida, gerar um slug com nanoid, 
 // verificar se já existe a nova url no banco, salvar e retornar:
 // { slug, shortUrl, originalUrl }
@@ -60,9 +59,20 @@ router.post('/', async (req: Request, res: Response) => {
         }
 }) 
 
-router.get("/", async (req: Request, res: Response) => {
-    const hello =  "Hello World"
-    return res.status(200).json({"message":hello})
+router.get("/:slug", async (req: Request, res: Response) => {
+    const { slug } = req.params;
+    try {
+         const url = await Url.findOne({ slug })
+        if (!url) {
+            return res.status(404).json({"message": "URL not found"})
+        }
+        return res.status(301).redirect(url.originalUrl)
+    } catch (e) {
+        const message = e instanceof Error ? e.message : "Internal server error"
+        return res.status(500).json({ "error": message })
+    }
+   
+
 })
 
 export default router
