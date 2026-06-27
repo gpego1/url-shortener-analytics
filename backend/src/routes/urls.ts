@@ -13,34 +13,51 @@ const isValidUrl = (url: string): boolean => {
     }
 }
 
+const existsShortUrl = async (originalUrl: string) => {
+    try {
+        const foundUrl = await Url.findOne({ originalUrl })
+        if (foundUrl) {
+            console.log("This url has alredy a short version");
+            return true
+        } else {
+            return false
+        }
+    } catch (error) {
+        throw error
+    }
+}
+
+
 // receber uma originalUrl, validar se é uma url válida, gerar um slug com nanoid, 
 // verificar se já existe a nova url no banco, salvar e retornar:
 // { slug, shortUrl, originalUrl }
 
 router.post('/', async (req: Request, res: Response) => {
     const { originalUrl } = req.body;
+        if (!originalUrl || typeof originalUrl !== "string") {
+            return res.status(400).json({ message: "Url is a required param" })
+        }
 
-    if (!originalUrl || typeof originalUrl !== "string") {
-        return res.status(400).json({ message: "Url is a required param" })
-    }
-
-    if (!isValidUrl(originalUrl)) {
-        return res.status(422).json({
-            valid: false, 
-            message: "Invalid URL"
-        })
-    }
-    try {
-        const slug = nanoid(6)
-        const newUrl = await Url.create({ slug, originalUrl })
-        const shortUrl = `${process.env.BASE_URL}/${slug}`
-
-        return res.status(201).json({ "shorturl" : shortUrl, "originalUrl": originalUrl, "slug": slug})
-    } catch (e) {
-        console.error(e)
-        return res.status(400).json({"message": e})
-    }
-    
+        if (!isValidUrl(originalUrl)) {
+            return res.status(422).json({
+                valid: false, 
+                message: "Invalid URL"
+            })
+        }
+        try {
+        const hasShortUrl = await existsShortUrl(originalUrl)
+        if (!hasShortUrl) {
+            const slug = nanoid(6)
+                await Url.create({ slug, originalUrl })
+                const shortUrl = `${process.env.BASE_URL}/${slug}`
+                return res.status(201).json({ "shorturl" : shortUrl, "originalUrl": originalUrl, "slug": slug})
+            } else {
+            return res.status(403).json({"message": "This url has alredy a short version"})
+        }
+        }  catch (e) {
+            const message = e instanceof Error ? e.message : "Internal server error"
+            return res.status(500).json({ "error": message })
+        }
 }) 
 
 router.get("/", async (req: Request, res: Response) => {
