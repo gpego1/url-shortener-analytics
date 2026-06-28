@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/api/urls", urlsRouter)
-app.use("/api/clicks", clicksRouter)
+app.use("/api/stats", clicksRouter)
 
 export default app;
 

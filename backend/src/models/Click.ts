@@ -14,4 +14,5 @@ const ClickSchema = new Schema<IClick>(
     },
     { timestamps: true }
 )
+
 export default mongoose.model<IClick>('Click', ClickSchema)
