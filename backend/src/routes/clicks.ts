@@ -1,6 +1,5 @@
 import { Router, Request, Response} from "express"
 import Click from "../models/Click.js"
-import { schedulingPolicy } from "node:cluster"
 
 const router = Router()
 
@@ -39,7 +38,11 @@ router.get("/:slug", async (req: Request, res: Response) => {
         ])
 
         if (clicksPerDay.length === 0) {
-            return res.status(200).json({"message": "No clicks available"})
+            return res.status(200).json({
+                "totalClicks": 0,
+                "clicksPerDay": [],
+                "mostSearched": []
+            })
         }
 
         const totalClicks = clicksPerDay.reduce((acc, day) => acc + day.total, 0)
