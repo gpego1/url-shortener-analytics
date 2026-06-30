@@ -1,3 +1,4 @@
+import api from "../api/client.js"
 import { useState } from "react"
 import Hero from "../components/home/Hero.js"
 import UrlForm from "../components/UrlForm.js"
@@ -15,6 +16,14 @@ function HomePage() {
     setError(null)
     setResult(null)
     // ponto de integração: chamar POST /api/urls e então setResult(...) ou setError(...)
+    // try {
+    //   const response = await api.post("/api/urls", {
+    //     originalUrl: _originalUrl,
+    //   })
+
+    // } catch (err) {
+
+    // }
     setLoading(false)
   }
 
