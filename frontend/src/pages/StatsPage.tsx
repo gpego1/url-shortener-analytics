@@ -1,3 +1,5 @@
+import api from "../api/client.js"
+import { getApiErrorMessage } from "../lib/errorHandler.js"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import StatsLookupForm from "../components/stats/StatsLookupForm.js"
@@ -12,13 +14,23 @@ function StatsPage() {
   const [stats, setStats] = useState<UrlStats | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
 
-  const handleSearch = (_slug: string) => {
+  const handleSearch = async (_slug: string) => {
     setLoading(true)
     setError(null)
     setStats(null)
-    // ponto de integração: chamar GET /api/stats/:slug e então setStats(...) ou setError(...)
-    setLoading(false)
+    
+    try {
+      const response = await api.get<UrlStats | null>(`/api/stats/${_slug}`)
+      setStats(response.data)
+    } catch (err) {
+      const { message } = getApiErrorMessage(err)
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
+   
   }
 
   return (

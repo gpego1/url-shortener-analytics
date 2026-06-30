@@ -1,4 +1,5 @@
 import api from "../api/client.js"
+import { getApiErrorMessage } from "../lib/errorHandler.js"
 import { useState } from "react"
 import Hero from "../components/home/Hero.js"
 import UrlForm from "../components/UrlForm.js"
@@ -11,20 +12,25 @@ function HomePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleShorten = (_originalUrl: string) => {
+  const handleShorten = async (_originalUrl: string) => {
     setLoading(true)
     setError(null)
     setResult(null)
-    // ponto de integração: chamar POST /api/urls e então setResult(...) ou setError(...)
-    // try {
-    //   const response = await api.post("/api/urls", {
-    //     originalUrl: _originalUrl,
-    //   })
+    
+    try {
+      const response = await api.post("/api/urls", {
+        originalUrl: _originalUrl,
+      })
 
-    // } catch (err) {
+      setResult(response.data)
 
-    // }
-    setLoading(false)
+    } catch (err) {
+      const { message } = getApiErrorMessage(err)
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
+    
   }
 
   return (
