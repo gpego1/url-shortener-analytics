@@ -1,14 +1,15 @@
 import { useState } from "react"
 import type { FormEvent } from "react"
-import Spinner from "./ui/Spinner.js"
+import Spinner from "../ui/Spinner.js"
 
-interface UrlFormProps {
-  onSubmit: (originalUrl: string) => void
+interface StatsLookupFormProps {
+  initialSlug?: string
+  onSubmit: (slug: string) => void
   loading?: boolean
 }
 
-function UrlForm({ onSubmit, loading = false }: UrlFormProps) {
-  const [value, setValue] = useState("")
+function StatsLookupForm({ initialSlug = "", onSubmit, loading = false }: StatsLookupFormProps) {
+  const [value, setValue] = useState(initialSlug)
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -17,24 +18,24 @@ function UrlForm({ onSubmit, loading = false }: UrlFormProps) {
   }
 
   return (
-    <form className="url-form" onSubmit={handleSubmit}>
+    <form className="stats-lookup-form" onSubmit={handleSubmit}>
       <div className="input-group">
-        <label htmlFor="url-input" className="sr-only">URL</label>
+        <label htmlFor="slug-input" className="sr-only">Código do link</label>
         <input
-          id="url-input"
+          id="slug-input"
           type="text"
           className="input"
-          placeholder="Cole sua URL aqui..."
+          placeholder="Digite o código do link (ex: aZ3kP9)"
           value={value}
           onChange={(event) => setValue(event.target.value)}
           disabled={loading}
         />
         <button type="submit" className="btn btn--primary" disabled={loading}>
-          {loading ? <Spinner /> : "Encurtar"}
+          {loading ? <Spinner /> : "Buscar"}
         </button>
       </div>
     </form>
   )
 }
 
-export default UrlForm
+export default StatsLookupForm
