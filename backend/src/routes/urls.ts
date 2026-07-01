@@ -60,22 +60,4 @@ router.post('/', async (req: Request, res: Response) => {
         }
 }) 
 
-router.get("/:slug", async (req: Request, res: Response) => {
-    const slug  = req.params.slug as string;
-    try {
-         const url = await Url.findOne({ slug })
-        if (!url) {
-            return res.status(404).json({"message": "URL not found"})
-        }
-        const userAgent = req.headers["user-agent"] ?? "unknown"
-        const newClick = await createClick(slug, url.originalUrl, userAgent )
-        return res.status(301).redirect(url.originalUrl)
-    } catch (e) {
-        const message = e instanceof Error ? e.message : "Internal server error"
-        return res.status(500).json({ "error": message })
-    }
-   
-
-})
-
 export default router

@@ -7,8 +7,17 @@ import UrlResult from "../components/home/UrlResult.js"
 import ErrorMessage from "../components/ui/ErrorMessage.js"
 import type { ShortenResult } from "../types/index.js"
 
+const SESSION_KEY = "home:lastResult"
+
 function HomePage() {
-  const [result, setResult] = useState<ShortenResult | null>(null)
+  const [result, setResult] = useState<ShortenResult | null>(() => {
+    try {
+      const saved = sessionStorage.getItem(SESSION_KEY)
+      return saved ? (JSON.parse(saved) as ShortenResult) : null
+    } catch {
+      return null
+    }
+  })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -16,13 +25,14 @@ function HomePage() {
     setLoading(true)
     setError(null)
     setResult(null)
-    
+
     try {
       const response = await api.post("/api/urls", {
         originalUrl: _originalUrl,
       })
 
       setResult(response.data)
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(response.data))
 
     } catch (err) {
       const { message } = getApiErrorMessage(err)
