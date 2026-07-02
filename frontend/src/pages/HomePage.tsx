@@ -1,4 +1,4 @@
-import api from "../api/client.js"
+import { api } from "../api/client.js"
 import { getApiErrorMessage } from "../lib/errorHandler.js"
 import { useState } from "react"
 import Hero from "../components/home/Hero.js"
