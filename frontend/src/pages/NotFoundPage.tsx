@@ -5,7 +5,7 @@ function NotFoundPage() {
     <div className="not-found-page">
       <h1>404</h1>
       <p>Página não encontrada.</p>
-      <Link to="/" className="btn btn--primary">Voltar para o início</Link>
+      <Link to="/encurtar" className="btn btn--primary">Voltar para o início</Link>
     </div>
   )
 }

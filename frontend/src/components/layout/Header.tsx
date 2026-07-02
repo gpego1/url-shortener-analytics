@@ -4,7 +4,7 @@ function Header() {
   return (
     <header className="header">
       <div className="container header__inner">
-        <NavLink to="/" className="header__brand">
+        <NavLink to="/encurtar" className="header__brand">
           <img src="/favicon.svg" alt="" className="header__logo" />
           <span>
             short<span className="header__brand-accent">.ly</span>
@@ -12,8 +12,7 @@ function Header() {
         </NavLink>
         <nav className="header__nav">
           <NavLink
-            to="/"
-            end
+            to="/encurtar"
             className={({ isActive }) => `header__link ${isActive ? "header__link--active" : ""}`}
           >
             Início
@@ -25,6 +24,14 @@ function Header() {
             Estatísticas
           </NavLink>
         </nav>
+        <div className="header__auth">
+          <NavLink to="/login" className="btn btn--ghost btn--sm">
+            Entrar
+          </NavLink>
+          <NavLink to="/register" className="btn btn--primary btn--sm">
+            Criar conta
+          </NavLink>
+        </div>
       </div>
     </header>
   )

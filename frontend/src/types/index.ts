@@ -19,3 +19,20 @@ export interface UrlStats {
   clicksPerDay: ClicksPerDay[]
   mostSearched: MostSearched[]
 }
+
+export interface LoginPayload {
+  email: string
+  password: string
+}
+
+export interface RegisterPayload {
+  name: string
+  email: string
+  password: string
+}
+
+export interface AuthUser {
+  id: string
+  name: string
+  email: string
+}
