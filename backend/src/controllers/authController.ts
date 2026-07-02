@@ -23,7 +23,7 @@ export async function register(req: Request, res: Response) {
 export async function login(req: Request, res: Response) {
     const { email, password }: LoginDTO = req.body
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email }).select("+password")
     if (!user) return res.status(401).json({"message":"Invalid credentials."})
     
     const isPasswordValid = await user.comparePassword(password)

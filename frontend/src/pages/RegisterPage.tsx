@@ -1,12 +1,29 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react"
 import AuthCard from "../components/auth/AuthCard.js"
 import RegisterForm from "../components/auth/RegisterForm.js"
-import type { RegisterPayload } from "../types/index.js"
+import type { RegisterPayload } from "../api/authService.js"
+import { useAuth } from "../context/AuthContext.js"
+import { getApiErrorMessage } from "../lib/errorHandler.js"
 
 function RegisterPage() {
-  const handleRegister = (data: RegisterPayload) => {
-    // TODO: integrar com POST /api/auth/register
-    console.log(data)
+  const { register } = useAuth()
+  const navigate = useNavigate()
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const handleRegister = async (data: RegisterPayload) => {
+    setError(null)
+    setLoading(true)
+    try {
+      await register(data)
+      navigate("/login")
+    } catch (err) {
+      const { message } = getApiErrorMessage(err)
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -20,7 +37,7 @@ function RegisterPage() {
           </p>
         }
       >
-        <RegisterForm onSubmit={handleRegister} />
+        <RegisterForm onSubmit={handleRegister} loading={loading} error={error} />
       </AuthCard>
     </div>
   )

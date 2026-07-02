@@ -3,7 +3,7 @@ import type { FormEvent } from "react"
 import PasswordInput from "../ui/PasswordInput.js"
 import ErrorMessage from "../ui/ErrorMessage.js"
 import Spinner from "../ui/Spinner.js"
-import type { RegisterPayload } from "../../types/index.js"
+import type { RegisterPayload } from "../../api/authService.js"
 
 interface RegisterFormProps {
   onSubmit: (data: RegisterPayload) => void
